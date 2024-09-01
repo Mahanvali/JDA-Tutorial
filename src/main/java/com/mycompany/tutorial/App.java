@@ -22,7 +22,7 @@ public class App
         JDA jda = jdaBuilder.build();
 
         jda.updateCommands().addCommands(
-            Commands.slash("ping", "A simple ping command! "),
+            Commands.slash("ping", "A simple ping command!"),
             Commands.context(Command.Type.USER, "Report")
         ).queue();
     }
