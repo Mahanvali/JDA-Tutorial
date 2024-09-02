@@ -10,7 +10,9 @@ import com.mycompany.tutorial.Listeners.MessageListener;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.interactions.commands.Command;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
+import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 
 public class App 
@@ -22,7 +24,16 @@ public class App
         JDA jda = jdaBuilder.build();
 
         jda.updateCommands().addCommands(
-            Commands.slash("ping", "A simple ping command!"),
+            //  Create a new slash command, ping.
+            Commands.slash("ping", "A say command")
+                //  Add subcomamnds
+                .addSubcommands(
+                new SubcommandData("add", "Add I guess"),
+                new SubcommandData("remove", "Remove I guess")
+                ),
+                // Options
+                // .addOption(OptionType.String, "message", "message to say", true),
+            //  Report Context menu
             Commands.context(Command.Type.USER, "Report")
         ).queue();
     }
