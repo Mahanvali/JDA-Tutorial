@@ -2,6 +2,7 @@ package com.mycompany.tutorial;
 
 import java.util.EnumSet;
 
+import com.mycompany.tutorial.Commands.KickCommand;
 import com.mycompany.tutorial.Commands.ModalCommand;
 import com.mycompany.tutorial.Commands.PingCommand;
 import com.mycompany.tutorial.Listeners.ButtonInteractionListener;
@@ -12,6 +13,7 @@ import com.mycompany.tutorial.Listeners.ModalInteractionListener;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.interactions.commands.Command;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 import net.dv8tion.jda.api.requests.GatewayIntent;
@@ -21,7 +23,7 @@ public class App
     public static void main( String[] args )
     {
         JDABuilder jdaBuilder = JDABuilder.createDefault(args[0], EnumSet.of(GatewayIntent.GUILD_MESSAGES, GatewayIntent.MESSAGE_CONTENT))
-            .addEventListeners(new MessageListener(), new ButtonInteractionListener(), new PingCommand(), new ModalCommand(), new ContextListeners(), new ModalInteractionListener());
+            .addEventListeners(new MessageListener(), new ButtonInteractionListener(), new PingCommand(), new ModalCommand(), new ContextListeners(), new ModalInteractionListener(), new KickCommand());
         JDA jda = jdaBuilder.build();
 
         jda.updateCommands().addCommands(
@@ -36,7 +38,10 @@ public class App
                 // .addOption(OptionType.String, "message", "message to say", true),
             //  Report Context menu
             Commands.context(Command.Type.USER, "Report"),
-            Commands.slash("modal", "Simple modal popup")
+            Commands.slash("modal", "Simple modal popup"),
+            Commands.slash("kick", "Kick a user!")
+                .addOption(OptionType.USER, "user", "The user to kick", true)
+                .addOption(OptionType.STRING, "reason", "The reason for kicking the user", true)
         ).queue();
     }
 }
