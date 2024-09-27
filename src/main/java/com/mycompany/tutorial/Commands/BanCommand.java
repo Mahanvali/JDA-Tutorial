@@ -1,29 +1,33 @@
 package com.mycompany.tutorial.Commands;
 
+import java.util.concurrent.TimeUnit;
+
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
-public class KickCommand extends ListenerAdapter {
+public class BanCommand extends ListenerAdapter {
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event){
-        //  If the slash command is the kick command
-        if(event.getName().equals("kick")){
-            //  Get the user and reason options
+        if(event.getName().equals("ban")){
             User targetUser = event.getOption("user").getAsUser();
             String reason = event.getOption("reason").getAsString();
-            //  Don't allow the user to kick themselves
+            int deletionTimeFrame = event.getOption("deletiontime").getAsInt();
+
+            if(deletionTimeFrame > 7){
+                deletionTimeFrame = 7;
+            }
+
             if(targetUser.getId().equals(event.getUser().getId())){
-                event.reply("You can not kick yourself!").queue();
+                event.reply("You can not ban yourself").queue();
                 return;
             }
-            //  Don't allow the user to kick the bot
+
             if(targetUser.getId().equals(event.getJDA().getSelfUser().getId())){
-                event.reply("You can not kick the bot!").queue();
+                event.reply("You can not ban the bot").queue();
                 return;
             }
-            //  Kicking the user
-            event.getGuild().kick(targetUser).reason(reason).queue();
-            event.reply(targetUser.getAsMention() + " has been kicked!\n Reason: " + reason).queue();
+            event.getGuild().ban(targetUser, deletionTimeFrame, TimeUnit.DAYS).reason(reason).queue();
+            event.reply(targetUser.getAsMention() + " has been banned\n" + "Reason: " + reason).queue();
         }
     }
 }
